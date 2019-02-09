@@ -4,19 +4,22 @@
 angular.module('ShoppingListComponentApp', [])
 .controller('ShoppingListController', ShoppingListController)
 .factory('ShoppingListFactory', ShoppingListFactory)
-.component('shoppingList', {
+.component('shoppingList', { //changed to 'component'
+//configuration object
   templateUrl: 'shoppingList.html',
   controller: ShoppingListComponentController,
-  bindings: {
-    items: '<',
+  bindings: { //instead of scope
+    items: '<', // one-way binding object
     myTitle: '@title',
-    onRemove: '&'
+    onRemove: '&' // reference function, callback back to the parent controller
   }
 });
 
 ShoppingListComponentController.$inject = ['$element']
 function ShoppingListComponentController($element) {
+  // '$ctrl' is just a local variable
   var $ctrl = this;
+  // added in part 4
   var totalItems;
 
   $ctrl.cookiesInList = function () {
@@ -32,12 +35,30 @@ function ShoppingListComponentController($element) {
 
   $ctrl.remove = function (myIndex) {
     $ctrl.onRemove({ index: myIndex });
+    // 'index' comes from index.html
   };
-
+// Added in Part 3
   $ctrl.$onInit = function () {
     totalItems = 0;
   };
 
+// $ctrl.$postLink = function () {
+//   $scope.$watch('$ctrl.cookiesInList()', function (newValue, oldValue) {
+//     console.log($element);
+//     if (newValue === true) {
+//       // Show warning
+          // var warningElem = $element.find('div.error');
+          // warningElem.slideDown(900);
+//     }
+//     else {
+//       //hide warning
+        // var warningElem = $element.find('div.error');
+        // warningElem.slideUp(900);
+//     }
+//   });
+// }
+
+//Added in part 3
   $ctrl.$onChanges = function (changeObj) {
     console.log("Changes: ", changeObj);
   }
